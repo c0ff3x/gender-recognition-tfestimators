@@ -1,23 +1,3 @@
-"""*****Código de clasificación de género principal para entrenar la red con tamaño de imagen 128*****
--Realizar prediccines sobre img_list para obtener más imagenes de cada clase y agregarlas a los archivos
-de entrenamiento y comparar con myfourth_model si la presición del modelo mejora aun más.(los datos están redimensionados
-antes de ser procesados.)
--Agregar más imagenes para entrenamiento porque no realiza bien las predicciones además se debe buscar
-que significa cuando la presición de predicción es menor que la prediccion de test.
--Porque son diferentes los resultados de training, validation and test
--Salvar el modelo de tf.estimator
--Revisar en la documentación oficial de tensorflow el como guardar un modelo para
-usarlo en otro lenguaje (deploy)
--Tenemos que revisar lo que tiene google colaboratory y este código para ponerlos en sincronía y ejecutar el modelo!
--Buscar técnicas que ayuden a mejorar la precisión del modelo como batch_normalization.
--Qué es confusion matrix, ¿en que puede ayudar?
--what is a roc cruve on machine learning
-**Listo
--Estamos enfrentando el detectar rostros que no están rectos a la cámara y tiene inclinaciones ligeras  entre 1 y 90 grados
-debemos de poder detectar dichos rostros además de ver como mejorar la predicción del modelo procesando la imagen con
-el preprocesamiento de imágenes del pdf "Image Enhancement for Face Recognition"(optional).--> data
-augment obtener más cantidad de datos al realizar esta operación sobre el dataset exsitente.
-"""
 #tensorflow version used = 1.13.1
 import tensorflow as tf
 import os
