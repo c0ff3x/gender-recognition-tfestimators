@@ -1,2 +1,2 @@
 # gender-recognition-tfestimators
-Gender classification based on images using tensorflow estimators
+Python application for gender classification based on grey scale images using tensorflow estimators
