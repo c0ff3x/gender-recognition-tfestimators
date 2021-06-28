@@ -1,0 +1,9 @@
+tensorflow-gpu==1.13.1
+glib>=2.56.2
+dlib>=19.17
+python>=3.6.8
+numpy>=1.16.2
+matplotlib>=3.0.3
+pillow>=5.4.1
+scikit-image>=0.14.2
+opencv>=3.4.3
