@@ -1,5 +1,4 @@
 """
-https://www.scienceabc.com/humans/skeleton-mystery-dont-bones-decay-decompose.html
 Código que redimensiona las imágenes para los archivos tfrecord de face_recognition_project
 """
 import os
