@@ -20,8 +20,8 @@ class PrepareImage(object):
 		"""
 		PATH_ERROR_IMAGES: string; ruta del directorio de imagenes que contienen errores
 		IMG_SIZE: int; tamaño al cual las imágenes serán redimensionadas"""
-		self.__TRAIN_DIR = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'	
-		self.__TEST_DIR = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/testset/'
+		self.__TRAIN_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'	
+		self.__TEST_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/testset/'
 		self.__destination_dirname = os.path.dirname(os.path.realpath(__file__))+'/train/'
 		self.__PATH_ERROR_IMAGES= os.path.dirname(os.path.realpath(__file__))+'/Error_Images/'
 		self.__nofaces_dirname = os.path.dirname(os.path.realpath(__file__))+"/train_negatives/"
@@ -229,7 +229,7 @@ class PrepareImage(object):
 			imágenes procesadas
 			"""
 		start = time.time()
-		source_dirname = self.__TRAIN_DIR if source_dirname is None else source_dirname
+		source_dirname = self.__TRAIN_DIRECTORY if source_dirname is None else source_dirname
 		destination_dirname = self.__destination_dirname if destination_dirname is None else destination_dirname
 		print("Trabajando...")
 		#recorremos la carpeta contenedora de las clases hombre/mujer
@@ -398,29 +398,4 @@ class PrepareImage(object):
 #						self.writeOnFile(img, ".", "images_noaccepted_size.txt")
 						contador += 1
 			print(contador)
-
-
-	"""def list_files_comphresion_list(self):
-		This method takes too much time to execute the task so avoid its use
-		try:
-			start = time.time()
-			source = "/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/imagenes_listas/"
-			parent_dir = [each_file for each_file in os.listdir(source)]
-			folder_gender = [os.path.join(source, gender) for gender in parent_dir]
-			#print("folder_gender {0}".format(folder_gender))
-			for full_image_path in folder_gender:
-				full_image_path += "/"
-				#print(full_image_path)
-				self.__full_image.extend([os.path.join(full_image_path, image) for image in os.listdir(full_image_path)])
-
-
-			for item in self.__full_image:
-				print("archivo {0}".format(item))
-				if not self.__verify_image(item):
-					print("la imagen contiene errores y no será procesada {0}".format(item))
-			print(self.__full_image)
-			end = time.time()
-			print(end - start)
-		except:
-			print("Error al procesar los datos {0}".format(sys.exc_info()))"""
 
