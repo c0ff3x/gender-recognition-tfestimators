@@ -1,16 +1,17 @@
 """
-Código que redimensiona las imágenes para los archivos tfrecord de face_recognition_project
+This code resizes the images for tfrecord files
 """
 import os
 import sys, traceback
-import numpy as np
 import random
 import shutil
-import cv2 as cv
-from skimage import io
-import dlib
-from PIL import Image
 import time
+
+import cv2 as cv
+import dlib
+import numpy as np
+from PIL import Image
+from skimage import io
 
 
 class PrepareImage(object):
@@ -19,27 +20,26 @@ class PrepareImage(object):
 		"""
 		PATH_ERROR_IMAGES: string; ruta del directorio de imagenes que contienen errores
 		IMG_SIZE: int; tamaño al cual las imágenes serán redimensionadas"""
-		self.__TRAIN_DIR = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'
-		#"/home/hambo-abadeer/Descargas/women/"
+		self.__TRAIN_DIR = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'	
 		self.__TEST_DIR = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/testset/'
-		self.__destination_dirname = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/train/'
-		self.__PATH_ERROR_IMAGES= '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/Error_Images/'
+		self.__destination_dirname = os.path.dirname(os.path.realpath(__file__))+'/train/'
+		self.__PATH_ERROR_IMAGES= os.path.dirname(os.path.realpath(__file__))+'/Error_Images/'
+		self.__nofaces_dirname = os.path.dirname(os.path.realpath(__file__))+"/train_negatives/"
+		self.__face_cascade = cv.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
 		self.__IMG_SIZE = 128
 		self.__allowed_image_extention = ["jpg", "jpeg", "png"]
-		self.__face_cascade = cv.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
 		self.__full_image = []
-		self.__nofaces_dirname = "/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/train_negatives/"
 
 
-	def __create_folder(self, directorio):
+	def __create_folder(self, directory):
 		"""Crea un folder en la ruta especificada
 		Args:
-			directorio: string; ruta de la carpeta a crear"""
+			directory: string; ruta de la carpeta a crear"""
 		try:
-			if not os.path.exists(directorio):
-				os.makedirs(directorio)
+			if not os.path.exists(directory):
+				os.makedirs(directory)
 		except OSError:
-			print("Error al crear el directorio: {0}".format(directorio))
+			print("Error al crear el directorio: {0}".format(directory))
 
 
 	def __verify_image(self, img_file):
