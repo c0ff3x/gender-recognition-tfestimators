@@ -13,7 +13,7 @@ class DataRead:
 		self._root_path = os.path.dirname(os.path.realpath(__file__))
 
 
-	def get_label(self, class_name):
+	def _get_label(self, class_name):
 		return self._labels[class_name]
 
 
@@ -47,7 +47,7 @@ class DataRead:
 		labels = []
 		if os.path.exists(source_dirname):
 			for image in os.listdir(source_dirname):
-				labels.append(self.get_label(os.path.basename(image).split('_')[0]))
+				labels.append(self._get_label(os.path.basename(image).split('_')[0]))
 				absolute_path_images.append(os.path.join(source_dirname, image))
 
 			return absolute_path_images, labels
@@ -72,7 +72,7 @@ class DataRead:
 					source_dirname_gender = os.path.join(source_dirname, class_name)
 					for image in os.listdir(source_dirname_gender):
 						absolute_path_images.append(os.path.join(source_dirname_gender, image))
-						labels.append(self.get_label(class_name))
+						labels.append(self._get_label(class_name))
 
 			return absolute_path_images, labels
 		else:
@@ -109,26 +109,32 @@ class DataRead:
 			predicted_label: int; inferred class by the model 0|1.
 			image_index: int; number of the image which was inferred.
 		"""
-		try:
+		if os.path.exists(full_image_path):
 			image_name = os.path.basename(full_image_path)
 			cv_image = cv.imread(full_image_path, 0)
 			inference_dir_path = self._root_path+"/inferencia/"
 
 			if predicted_label == 1:
-				inference_directory_fullpath = create_dirs(inference_dir_path, "mujer")
+				inference_directory_fullpath = self._create_dirs(inference_dir_path, "mujer")
 				new_image_name = "mujer_"+str(image_index)+".jpg"
-				cv.imwrite(os.path.join(inference_directory_fullpath, new_image_name), cv_image)
+				try:
+					cv.imwrite(os.path.join(inference_directory_fullpath, new_image_name), cv_image)
+				except IOError:
+					print("An error ocurred while trying to save the image->{0}".format(sys.exc_info()))
 				PrepareImage().writeOnFile(image_name, new_image_name, self._inferencia_log_file)
 			elif predicted_label == 0:
-				inference_directory_fullpath = create_dirs(inference_dir_path, "hombre")
+				inference_directory_fullpath = self._create_dirs(inference_dir_path, "hombre")
 				new_image_name = "hombre_"+str(image_index)+".jpg"
-				cv.imwrite(os.path.join(inference_directory_fullpath, new_image_image), cv_image)
+				try:
+					cv.imwrite(os.path.join(inference_directory_fullpath, new_image_image), cv_image)
+				except IOError:
+					print("An errro ocurred while trying to save the image->{0}".format(sys.exc_info()))
 				PrepareImage().writeOnFile(image_name, new_image_image, self._inferencia_log_file)
-		except IOError:
-			print("Error-->{0}".format(sys.exc_info()))
+		else:
+			print("The file does not exists or the path is wrong-->{0}".format(full_image_path))
 
 
-	def create_dirs(self, directory_path, gender):
+	def _create_dirs(self, directory_path, gender):
 		gender_directory_fullpath = os.path.join(directory_path, gender)
 		if not os.path.exists(gender_directory_fullpath):
 			os.makedirs(gender_directory_fullpath)
