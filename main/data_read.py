@@ -16,18 +16,18 @@ class DataRead:
 		return self._labels[class_name]
 
 
-	def count_files(self, source_dirname):
+	def count_tf_files(self, source_directory):
 		"""
-		Cuenta el número de elementos tfrecord que se encuentran dentro de source_dirname,
-		asume que todos los elementos dentro de la carpeta están en dicho formato.
-		(slpitext return a tuple with root and extention file type)
+		counts how many tfrecord files are inside of a directory, the method assumes all
+		files inside the directory are in such format.
 		Args:
-			source_dirname: string, ruta en crudo de la carpeta contenedora de los archivos tfrecord.
+			source_directory: string, path of the directory containing the tfrecord 
+			files.
 		Return:
-			int: número de archvios dentro de la carpeta.
+			int: number of files inside of the directory.
 		"""
 		number_of_files = 0
-		for tf_file in os.listdir(os.path.dirname(source_dirname)):
+		for tf_file in os.listdir(os.path.dirname(source_directory)):
 			if tf_file.lower().endswith('.tfrecord'):
 				number_of_files += 1
 		return number_of_files
@@ -35,11 +35,12 @@ class DataRead:
 
 	def read_byname(self, source_dirname):
 		"""
-		Provee a la red un método de entrada para la predicción en imagenes no vistas
-		NOTA: la diferencia de read_file es que este método genera las etiquetas para cada
-		imagen basandose en el nombre de la imagen el cual debe estar especificado de la
-		forma: mujer_0.jpg, hombre_0.jpg. Siendo '_' el delimitador que separa la clase de
-		la imagen del resto del nombre de cada imagen.
+		Gives to the network a pipeline for prediction on unseen images.
+		NOTE: Gives to the network a pipeline for prediction on unseen images. Unlike
+		read_file method, this method returns the labels for each image based in the
+		image's name, the image name should be in the form: woman_0: mujer_0.jpg,
+		hombre_0.jpg. Where '_' is the delimiter that separates the class of the image
+		from the rest of the image name.
 		"""
 		absolute_path_images = []
 		labels = []
@@ -54,10 +55,10 @@ class DataRead:
 
 
 	def read_bydirectories(self, source_dirname):
-		"""
-		Proporciona un método de entrada para la predicción de imagenes no vistas.
-		las imagenes deben encontrarse con la siguiente estructura:
-		directorio-
+		"""	
+		Gives to the network a pipeline for prediction on unseen images.
+		Images and the directories should be in the following structure:
+		directory-
 			..directorio_clase_1/imagen_x.jpg
 			..directorio_clase_2/imagen_x.jpg
 		"""
@@ -78,17 +79,17 @@ class DataRead:
 
 
 	def read_byrandom(self, source_dirname):
-		"""
-		Proporciona un método de entrada para la predicción de imágenes no vistas.
-		Este método genera las etiquetas para cada imagen con valores aleatorios de 0(hombre) a
-		1(mujer) asumiendo una implementación del mundo real donde no se sabe a que clase pertenece
-		la imagen a predecir.
+		"""	
+		Gives to the network a pipeline for prediction on unseen images.
+		This method generates labels for each image with random values of: 0 (for men) 
+		and 1 (for women), assuming a real case where is unknown the class of the 
+		image to be inferred.	
 		Args:
-			source_dirname: string; ruta en crudo de la carpeta contenedora de las imagenes para realizar
-			la inferencia.
+			source_dirname: string; directory path that contains the images to be 
+			predicted.	
 		Return:
-			absolute_path_images: lista; rutas de cada imagen.
-			labels: lista; etiquetas de las imagenes generadas aleatoriamente.
+			absolute_path_images: list; path for each image.
+			labels: list; random generated labels for the images.
 		"""
 		absolute_path_images = []
 		labels = []
@@ -100,12 +101,12 @@ class DataRead:
 
 	def save_image(self, full_image_path, predicted_label, image_index):
 		"""
-		Guarda la imagen de acuerdo a la predicción realizada(gender) en la carpeta de su clase
-		correspondiente: data/mujer/..  | data/hombre/..
+		Saves the image based on performed prediction in the directory of it's
+		corresponding class: directory_data/mujer/..  | directory_data/hombre/..
 		Args:
-			full_img_path: string; ruta en crudo de la imagen.
-			predicted_label: int; clase inferida por el modelo 0|1.
-			image_index: int; número de imagen a la que se le realizó inferencia.
+			full_image_path: string; path of the image.
+			predicted_label: int; inferred class by the model 0|1.
+			image_index: int; number of the image which was inferred.
 		"""
 		try:
 			image_name = os.path.basename(full_image_path)
