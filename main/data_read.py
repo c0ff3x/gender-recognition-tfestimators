@@ -10,6 +10,7 @@ class DataRead:
 	def __init__(self):
 		self._labels = {'hombre': 0, 'mujer': 1}
 		self._inferencia_log_file = "inferencia_log.txt"
+		self._root_path = os.path.dirname(os.path.realpath(__file__))
 
 
 	def get_label(self, class_name):
@@ -44,14 +45,14 @@ class DataRead:
 		"""
 		absolute_path_images = []
 		labels = []
-		try:
+		if os.path.exists(source_dirname):
 			for image in os.listdir(source_dirname):
 				labels.append(self.get_label(os.path.basename(image).split('_')[0]))
 				absolute_path_images.append(os.path.join(source_dirname, image))
 
 			return absolute_path_images, labels
-		except IOError:
-			print("read_byname_files:Error-->{0}".format(sys.exc_info()))
+		else:
+			print("The directory does not exists or the path is wrong -->{0}".format(source_dirname))
 
 
 	def read_bydirectories(self, source_dirname):
@@ -62,7 +63,7 @@ class DataRead:
 			..directorio_clase_1/imagen_x.jpg
 			..directorio_clase_2/imagen_x.jpg
 		"""
-		try:
+		if os.path.exists(source_dirname):
 			absolute_path_images = []
 			labels = []
 			for classes in os.listdir(source_dirname):
@@ -74,8 +75,8 @@ class DataRead:
 						labels.append(self.get_label(class_name))
 
 			return absolute_path_images, labels
-		except IOError:
-			print("read_bydirectorioes:Error-->{0}".format(sys.exc_info()))
+		else:
+			print("The directory does not exists or the path is wrong -->{0}".format(source_dirname))
 
 
 	def read_byrandom(self, source_dirname):
@@ -111,7 +112,7 @@ class DataRead:
 		try:
 			image_name = os.path.basename(full_image_path)
 			cv_image = cv.imread(full_image_path, 0)
-			inference_dir_path = "/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/inferencia/"
+			inference_dir_path = self._root_path+"/inferencia/"
 
 			if predicted_label == 1:
 				inference_directory_fullpath = create_dirs(inference_dir_path, "mujer")
