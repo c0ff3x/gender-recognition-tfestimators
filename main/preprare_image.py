@@ -18,14 +18,20 @@ class PrepareImage(object):
 
 	def __init__(self):
 		"""
-		PATH_ERROR_IMAGES: string; ruta del directorio de imagenes que contienen errores
-		IMG_SIZE: int; tamaño al cual las imágenes serán redimensionadas"""
+		Initilize all creation paths for the generated directories and log files.
+		destination_dirname: string; path where train/test images will be saved after
+		pre-processing them.
+		path_error_images: string; path where all the images with errors will be saved.
+		(these images are not considered in the train/test images.)
+		nofaces_dirname: string; path where all images with no faces detected by opencv
+		or dlib will be saved.
+		"""
 		self.__TRAIN_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'	
 		self.__TEST_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/testset/'
 		self.__destination_dirname = os.path.dirname(os.path.realpath(__file__))+'/train/'
-		self.__PATH_ERROR_IMAGES= os.path.dirname(os.path.realpath(__file__))+'/Error_Images/'
+		self.__path_error_images= os.path.dirname(os.path.realpath(__file__))+'/Error_Images/'
 		self.__nofaces_dirname = os.path.dirname(os.path.realpath(__file__))+"/train_negatives/"
-		self.__face_cascade = cv.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
+		self.__face_cascade_path = cv.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
 		self.__IMG_SIZE = 128
 		self.__allowed_image_extention = ["jpg", "jpeg", "png"]
 		self.__full_image = []
