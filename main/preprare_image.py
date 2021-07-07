@@ -22,7 +22,7 @@ class PrepareImage(object):
 		destination_dirname: string; path where train/test images will be saved after
 		pre-processing them.
 		path_error_images: string; path where all the images with errors will be saved.
-		(these images are not considered in the train/test images.)
+		(these images are not considered in train/test images.)
 		nofaces_dirname: string; path where all images with no faces detected by opencv
 		or dlib will be saved.
 		"""
@@ -37,10 +37,7 @@ class PrepareImage(object):
 		self.__full_image = []
 
 
-	def __create_folder(self, directory):
-		"""Crea un folder en la ruta especificada
-		Args:
-			directory: string; ruta de la carpeta a crear"""
+	def __create_directory(self, directory_path):
 		try:
 			if not os.path.exists(directory):
 				os.makedirs(directory)
@@ -49,12 +46,10 @@ class PrepareImage(object):
 
 
 	def __verify_image(self, img_file):
-		"""verifica que una imagen no tiene errores y revisa que las
-		imágenes estén en formato jpg o jpeg dicho formato dividido
-		en nombre de la imagen y extensión en una lista
-		[nombre_imagen, extensión]
+		"""Verifies that one image has no error and checks if it's format is one of the
+		allowed formats.	
 		Args:
-			img_file: string; ruta de la imagen a analizar"""
+			img_file: string; image's path to be analized."""
 		try:
 			img = io.imread(img_file)
 			if os.path.basename(img_file).split(".")[1].lower() in self.__allowed_image_extention:
@@ -70,10 +65,12 @@ class PrepareImage(object):
 
 
 	def __is_gray_scale(self, image):
-		"""Verifica si la imagen es Grayscale o RGB recorriendo los píxeles de
-		la imagen y comparando si cada uno de cada nivel es igual R==G==B
+		"""Verifies if the image is graycale or RGB traversing each pixel in the image and
+		compares each one at each level if is equals to RVerifies if the image is graycalei
+		or RGB traversing each pixel in the image and compares each one at each level if is
+		equals to RGB..	
 		Args:
-			image: string; ruta de la imagen a verificar."""
+			image: string; ruta Image to verify."""
 		try:
 			img = Image.open(image).convert('RGB')
 			width, height = img.size
@@ -87,12 +84,12 @@ class PrepareImage(object):
 
 
 	def __get_correct_color_format(self, image):
-		"""Dada una ruta de una imagen, carga una imagen con el objecto opencv de
-		formato de color correcto usando el método is_gray_scale.
+		"""Given an image path, opecv object loads each image with the 
+		correct color format.
 		Args:
-			image: string, ruta en crudo de la imagen.
+			image: string, path of the image,
 		Return:
-			opencv_object, imagen con formato de color RGB o grayscale."""
+			opencv_object, correct color format image (RGB or grayscale)."""
 		if self.__is_gray_scale(image):
 			return cv.imread(image, 0)
 		else:
@@ -101,12 +98,12 @@ class PrepareImage(object):
 
 
 	def __faceDetector(self, raw_image, class_name, destination_dirname, contador):
-		"""Detecta los rostros dentro de una imagen
+		"""Detects faces inside an image using facecascade detector.
 		Args:
-			image: string; ruta en crudode la imagen
+			image: string; path of the image.
 			classname: string, hombre|mujer:
-			destination_dirname: string, carpeta donde se guardarán las imágenes:
-			contador: integer, número de la imagen -> hombre_contador.jpg"""
+			destination_dirname: string, directory path were the images will be saved.
+			contador: integer, number of the image -> hombre_contador.jpg"""
 		try:
 #			descomentar si se desea re-dimensionar las imágenes para el posterior pre-porcesamiento
 #			Esto fue realizado porque primero se redimensionan las imagenes para después ubicar el rostro
@@ -132,15 +129,14 @@ class PrepareImage(object):
 
 
 	def __dlib_detector(self, raw_image, class_name, destination_dirname, contador):
-		"""Detector de rostros usando la librería dlib,
-		usado como un segundo mecanismo de detección de rostro si opencv
-		face detector no detecta algún rostro dentro de la imagen
+		"""detects faces inside an image using dlib face detector.
+		It's used like a second mechanism for face detectin if opencv face
+		detector fails to detect a face inside an image.
 		Args:
-			image: string; ruta en crudo de la imagen.
+			image: string; path of the image.
 			class_name: string; hombre|mujer.
-			destination_dirname: string; ruta donde serán guardadas las
-			imágenes procesadas.
-			contador: int; contador para nombre de las imágenes
+			destination_dirname: string, directory path were the images will be saved.	
+			contador: int; counter that will be part of the name of the image.
 			--> mujer_contador.jpg"""
 		try:
 #			descomentar si se desea re-dimensionar las imágenes para el posterior pre-porcesamiento
@@ -176,11 +172,11 @@ class PrepareImage(object):
 
 
 	def __resize_keep_aspect_ratio(self, image):
-		"""Redimensiona la imagen manteniendo su proporción de aspecto
+		"""Resizes an image keepig its aspect ratio.
 		Args:
-			image: opencv_object, imagen a redimensionar
+			image: opencv_object, image to be resized.
 		Return:
-			new_im: opencv_object, imagen con las nuevas dimensiones
+			new_im: opencv_object, image with the new dimentions.
 		"""
 		try:
 			#si no he leido la imagen con opencv descomentar esto
@@ -206,7 +202,7 @@ class PrepareImage(object):
 
 
 	def __histo_enhancement(self, img):
-		"""Realiza Histogram equalization sobre una imagen a color.
+		"""Perform histogram equalization on the given an image.
 		Args:
 			img: opencv_object"""
 		R, G, B = cv.split(img)
@@ -218,21 +214,21 @@ class PrepareImage(object):
 
 
 	def resize_images(self, source_dirname=None, destination_dirname=None):
-		"""Dado un directorio con la forma
+		"""Given a directory in the form:
 			../data/hombre/img-x.jpg
 			../data/mujer/img-x.jpg
-		procesa las imagenes para el archivo train-tfrecord y test-tfrecord
-		cortando el rostro, redimensionando y cambiando su canal a 1
-		Genera las carpetas:
+		it process the images for the train-tfrecord and test-tfrecord files,
+		cutting the face, resizing it and chaning it's channel to 1
+		Generates the directories:
 			train/mujer/mujer-x.jpg
 			train/hombre/hombre-x.jpg
 			test/mujer/mujer-x.jpg
 			test/hombre/hombre-x.jpg
 		Args:
-			source_dirname: string, carpeta donde se encuentran las imágenes
-			a procesar
-			destination_dirname: string, carpeta donde serán guardadas las
-			imágenes procesadas
+			source_dirname: string, directory containing the images to be
+			processed a procesar.
+			destination_dirname: string, directory where all the processed images
+			will be saved.
 			"""
 		start = time.time()
 		source_dirname = self.__TRAIN_DIRECTORY if source_dirname is None else source_dirname
@@ -286,14 +282,14 @@ class PrepareImage(object):
 
 
 	def resize_onlevel_images(self, source_dirname, destination_dirname, name_included):
-		"""Prepara las imagenes para realizar predicciones sobre el modelo, la imagenes deben estar
-		dentro de una carpeta
+		"""Prepares the images to be inferred with the model, the images must be inside a
+		directory.	
 		Args:
-			source_dirname: string; ruta en crudo de la carpeta contenedora de imagenes.
-			destination_dirname: string; ruta en crudo donde serán guardadas las imagenes
-			procesadas.
-			name_included: boolean; especifica que el nombre clase de cada imagen se encuentra
-			en el nombre de la misma (True) de lo contrario se especifica (False).
+			source_dirname: string;  directory path that constains all the images.
+			destination_dirname: string; directory path where all the processed images
+			will be saved.
+			name_included: boolean; specifies that the class name of each image is
+			included in its name (True) otherwise (False).	
 			"""
 		print("Trabajando..")
 		start = time.time()
@@ -326,16 +322,16 @@ class PrepareImage(object):
 
 
 	def __save_image(self, full_image, class_name, destination_dirname, contador):
-		"""Gurada las imagenes de los rostros en blanco y negro con la dimension
-		especificada
+		"""Saves the face images in grayscale.
+		
 		Args:
-			full_image: opencv_object; objeto opencv de la imagen
-			class_name: string; nombre de la clase a la cual pertenece el rostro
-			destination_dirname: string; ruta del directorio donde la imagen será guardada
-			contador: Integer; número de imagen (se basa en el número de imagenes que
-			contenga el directorio especificado en la variable DIR_TRAIN/mujer-hombre)
+			full_image: opencv_object; image's opencv object
+			class_name: string; class name which the face image belongs.
+			destination_dirname: string; directory path where the image will be
+			saved.
+			contador: Integer; image numberi it's based on the number of images
+			that the directory ..TRAIN|TEST/classname has.	
 		"""
-		#tamaño de las imágenes: height, width
 		try:
 			self.__create_folder(destination_dirname)
 			#cambiamos el tamaño de la imagen
@@ -347,12 +343,12 @@ class PrepareImage(object):
 
 	@staticmethod
 	def writeOnFile(basename_img, newbasename_img, log_txt_name):
-		"""Crea un registro (txt) con el nombre anterior de la imagen y su nuevo nombre
-		de la forma: newbasename_img*basename_img
+		"""Creates a log file with the images previous name and the its new name in
+		the form: newbasename_img*basename_img
 		Args:
-			basename_img: string; nombre original de la imagen
-			newbasename_img: string; nuevo nombre de la imagen
-			log_name: string; nombre del archivo a crear, e.g
+			basename_img: string; original image name
+			newbasename_img: string; new name of the image
+			log_name: string; name of the log file to create. e.g
 			imagenes_procesadas_test, imagenes_procesadas_train"""
 
 		assert os.path.splitext(log_txt_name)[1].lower() == ".txt", "el formato de archivo debe ser .txt"
@@ -369,25 +365,26 @@ class PrepareImage(object):
 
 
 	def __get_img_name(self, img_name):
-		"""Asigna la clase hombre|mujer de acuerdo al nombre que contenga la imagen: imagen-mujer234.jpg
-		-> return mujer
+		"""Assigns the classname (hombre|mujer) according to the name that the image has:
+		imagen-mujer234.jpg -> return mujer
 		Args:
-			img_name: string; nombre de la imagen
+			img_name: string; image name.
 		Return:
-			hombre|mujer: string; clase correspondiente de acuerdo a nombre de la imagen."""
+			hombre|mujer: string; corresponding class according to the name of the image."""
 		if "mujer" in os.path.basename(img_name):
 			return "mujer"
 		elif "hombre" in os.path.basename(img_name):
 			return "hombre"
-#		levantar una excepción sino esta nombrada correctamente con mujer/hombre
+#		raise and exception if the image is not correctly named with mujer/hombre
 
 
 	def get_img_size(self, source_dirname):
-		"""Busca que las imagenes cumplan el tamaño de dimensiones mayor a 32x32 píxeles, las imagenes
-		que no cumplan este requisito serán registradas en images_noaccepted_size.txt
+		"""Check that images fulfill the measurements greater than 32*32 pixels, the
+		images that do not fulfill this requirement will logged in
+		images_noaccepted_size.txt.
 		Args:
-			source_dirname: string; ruta en crudo de la carpeta a examinar, esta debe estar con el
-			formato:
+			source_dirname: string; directory path to inspect, this must be with the
+			following format:			:
 			..directorio/mujer/imagen_x.jpg
 			..directorio/hombre/imagen_x.jpg"""
 		contador = 0
