@@ -13,11 +13,11 @@ class DataRead:
 		self._root_path = os.path.dirname(os.path.realpath(__file__))
 
 
-	def _get_label(self, class_name):
+	def _get_class_label(self, class_name):
 		return self._labels[class_name]
 
 
-	def count_tf_files(self, source_directory):
+	def count_tfrecords_files(self, source_directory):
 		"""
 		counts how many tfrecord files are inside of a directory, the method assumes all
 		files inside the directory are in such format.
@@ -47,7 +47,7 @@ class DataRead:
 		labels = []
 		if os.path.exists(source_dirname):
 			for image in os.listdir(source_dirname):
-				labels.append(self._get_label(os.path.basename(image).split('_')[0]))
+				labels.append(self._get_class_label(os.path.basename(image).split('_')[0]))
 				absolute_path_images.append(os.path.join(source_dirname, image))
 
 			return absolute_path_images, labels
@@ -72,7 +72,7 @@ class DataRead:
 					source_dirname_gender = os.path.join(source_dirname, class_name)
 					for image in os.listdir(source_dirname_gender):
 						absolute_path_images.append(os.path.join(source_dirname_gender, image))
-						labels.append(self._get_label(class_name))
+						labels.append(self._get_class_label(class_name))
 
 			return absolute_path_images, labels
 		else:
@@ -112,7 +112,7 @@ class DataRead:
 		if os.path.exists(full_image_path):
 			image_name = os.path.basename(full_image_path)
 			cv_image = cv.imread(full_image_path, 0)
-			inference_dir_path = self._root_path+"/inferencia/"
+			inference_dir_path = os.path.join(self._root_path,"/inferencia/")
 
 			if predicted_label == 1:
 				inference_directory_fullpath = self._create_dirs(inference_dir_path, "mujer")
