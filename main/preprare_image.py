@@ -70,11 +70,11 @@ class PrepareImage(object):
 		Args:
 			image: string; ruta Image to verify."""
 		try:
-			img = Image.open(image).convert('RGB')
-			width, height = img.size
-			for i in range(width):
-				for j in range(height):
-					r, g, b = img.getpixel((i, j))
+			image = Image.open(image_path).convert('RGB')
+			image_width, image_height = image.size
+			for i in range(image_width):
+				for j in range(image_height):
+					r, g, b = image.getpixel((i, j))
 					if r != g != b: return False
 			return True
 		except:
