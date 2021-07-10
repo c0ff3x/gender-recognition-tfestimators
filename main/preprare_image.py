@@ -26,8 +26,8 @@ class PrepareImage(object):
 		nofaces_dirname: string; path where all images with no faces detected by opencv
 		or dlib will be saved.
 		"""
-		self.__TRAIN_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/data/'	
-		self.__TEST_DIRECTORY = '/home/hambo-abadeer/Documentos/Bayot/PO/faceRecognition/testset/'
+		self.__TRAIN_DIRECTORY = '../faceRecognition/data/'	
+		self.__TEST_DIRECTORY = '../faceRecognition/testset/'
 		self.__destination_dirname = os.path.dirname(os.path.realpath(__file__))+'/train/'
 		self.__path_error_images= os.path.dirname(os.path.realpath(__file__))+'/Error_Images/'
 		self.__nofaces_dirname = os.path.dirname(os.path.realpath(__file__))+"/train_negatives/"
