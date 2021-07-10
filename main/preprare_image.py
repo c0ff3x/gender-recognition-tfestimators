@@ -33,35 +33,33 @@ class PrepareImage(object):
 		self.__nofaces_dirname = os.path.dirname(os.path.realpath(__file__))+"/train_negatives/"
 		self.__face_cascade_path = cv.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
 		self.__IMG_SIZE = 128
-		self.__allowed_image_extention = ["jpg", "jpeg", "png"]
+		self.__allowed_image_extention = ("jpg", "jpeg", "png")
 		self.__full_image = []
 
 
 	def __create_directory(self, directory_path):
-		try:
-			if not os.path.exists(directory):
-				os.makedirs(directory)
-		except OSError:
-			print("Error al crear el directorio: {0}".format(directory))
+		if not os.path.exists(directory):
+			os.makedirs(directory)
+		else:
+			print("The directory already exists.")
 
 
-	def __verify_image(self, img_file):
+	def __verify_image_has_no_error(self, image_path):
 		"""Verifies that one image has no error and checks if it's format is one of the
 		allowed formats.	
 		Args:
 			img_file: string; image's path to be analized."""
 		try:
-			img = io.imread(img_file)
-			if os.path.basename(img_file).split(".")[1].lower() in self.__allowed_image_extention:
-				#width, height
-				width, height = img.shape[:2]
-				if width > 20 and height > 20:
-					return True
-		except IndexError:
-			print("Error: La imagen debe contener al menos un formato de archivo de imagen {0}".format(img_file))
-			return False
-		except Exception:
-			return False
+			sky_image = io.imread(image_path)
+		except IOError:
+			print("Couldn't read image: stack {0}".format(sys.exc_info()))
+		if os.path.basename(image_path).lower().endswith(self.__allowed_image_extention):
+			#width, height
+			image_width, image_height = sky_image.shape[:2]
+			if image_width > 20 and image_height > 20:
+				return True
+		else:
+			print("Image should has at least one allowed image format, see docstring with python -i file.py")
 
 
 	def __is_gray_scale(self, image):
