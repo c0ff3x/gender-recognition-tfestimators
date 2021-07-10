@@ -62,7 +62,7 @@ class PrepareImage(object):
 			print("Image should has at least one allowed image format, see docstring with python -i file.py")
 
 
-	def __is_gray_scale(self, image):
+	def __is_gray_scale(self, image_path):
 		"""Verifies if the image is graycale or RGB traversing each pixel in the image and
 		compares each one at each level if is equals to RVerifies if the image is graycalei
 		or RGB traversing each pixel in the image and compares each one at each level if is
