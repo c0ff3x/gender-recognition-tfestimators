@@ -70,7 +70,7 @@ class PrepareImage(object):
 		Args:
 			image: string; ruta Image to verify."""
 		try:
-			img = Image.open(image).convert('RGB')
+			image = Image.open(image_path).convert('RGB')
 			width, height = img.size
 			for i in range(width):
 				for j in range(height):
