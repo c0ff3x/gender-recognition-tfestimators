@@ -95,7 +95,7 @@ class PrepareImage(object):
 			return cv.imread(image, 1)
 
 
-	def __faceDetector(self, image_path, class_name, destination_dirname, contador):
+	def __faceDetector(self, image_path, class_name, destination_dirname, counter):
 		"""Detects faces inside an image using facecascade detector.
 		Args:
 			image: string; path of the image.
