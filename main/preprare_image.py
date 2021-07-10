@@ -71,14 +71,14 @@ class PrepareImage(object):
 			image: string; ruta Image to verify."""
 		try:
 			image = Image.open(image_path).convert('RGB')
+		except:	
+			print("is_gray_scale: Error-->{0}".format(sys.exc_info()))
 			image_width, image_height = image.size
 			for i in range(image_width):
 				for j in range(image_height):
 					r, g, b = image.getpixel((i, j))
 					if r != g != b: return False
 			return True
-		except:
-			print("is_gray_scale: Error-->{0}".format(sys.exc_info()))
 
 
 	def __get_correct_color_format(self, image):
